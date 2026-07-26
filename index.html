@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Генератор идей для постов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -11,63 +14,279 @@
       padding: 0;
     }
 
+    :root {
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --text: #1e1b4b;
+      --text-muted: #6366a0;
+    }
+
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: #f5f7fa;
-      color: #1a1a2e;
+      font-family: "Manrope", system-ui, sans-serif;
+      background: #0f0a1e;
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
+      overflow: hidden;
     }
 
+    /* Animated background blobs */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg__blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation: float 12s ease-in-out infinite;
+    }
+
+    .bg__blob--1 {
+      width: 480px;
+      height: 480px;
+      background: #7c3aed;
+      top: -120px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .bg__blob--2 {
+      width: 400px;
+      height: 400px;
+      background: #ec4899;
+      bottom: -80px;
+      right: -60px;
+      animation-delay: -4s;
+    }
+
+    .bg__blob--3 {
+      width: 320px;
+      height: 320px;
+      background: #06b6d4;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -8s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -40px) scale(1.05); }
+      66%       { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    /* Main card */
     main {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-      padding: 48px 56px;
-      max-width: 520px;
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      padding: 52px 48px;
+      max-width: 540px;
       width: 100%;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      animation: cardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeUp 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .header__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(124, 58, 237, 0.25);
+      border: 1px solid rgba(167, 139, 250, 0.4);
+      color: #c4b5fd;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .header__badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #a78bfa;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
     }
 
     h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 32px;
-      color: #16213e;
+      font-size: clamp(1.6rem, 4vw, 2rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
     }
 
+    h1 span {
+      background: linear-gradient(135deg, #c4b5fd, #f9a8d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__sub {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 400;
+    }
+
+    /* List */
     ul {
       list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     li {
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      background: #f0f4ff;
-      border-radius: 10px;
-      font-size: 1.05rem;
-      border-left: 4px solid #4361ee;
-      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      cursor: default;
+      transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.3s ease;
+      animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
-    li:last-child {
-      margin-bottom: 0;
+    li:nth-child(1) { animation-delay: 0.3s; }
+    li:nth-child(2) { animation-delay: 0.42s; }
+    li:nth-child(3) { animation-delay: 0.54s; }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     li:hover {
-      background: #e4ebff;
+      background: rgba(124, 58, 237, 0.2);
+      border-color: rgba(167, 139, 250, 0.45);
+      transform: translateX(6px) scale(1.02);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+    }
+
+    .item__icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    li:hover .item__icon {
+      transform: scale(1.15) rotate(-4deg);
+    }
+
+    .item__icon--1 { background: rgba(124, 58, 237, 0.3); }
+    .item__icon--2 { background: rgba(236, 72, 153, 0.3); }
+    .item__icon--3 { background: rgba(6, 182, 212, 0.3); }
+
+    .item__text {
+      flex: 1;
+    }
+
+    .item__arrow {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 1.1rem;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    li:hover .item__arrow {
+      color: #c4b5fd;
+      transform: translateX(4px);
     }
   </style>
 </head>
 <body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blob bg__blob--1"></div>
+    <div class="bg__blob bg__blob--2"></div>
+    <div class="bg__blob bg__blob--3"></div>
+  </div>
+
   <main>
-    <h1>Генератор идей для постов</h1>
+    <div class="header">
+      <div class="header__badge">AI · Контент</div>
+      <h1>Генератор <span>идей</span> для постов</h1>
+      <p class="header__sub">Выберите формат — и получите готовые идеи</p>
+    </div>
+
     <ul>
-      <li>5 идей постов для экспертов</li>
-      <li>3 идеи сторис на сегодня</li>
-      <li>Контент-план на неделю</li>
+      <li>
+        <span class="item__icon item__icon--1">💡</span>
+        <span class="item__text">5 идей постов для экспертов</span>
+        <span class="item__arrow">→</span>
+      </li>
+      <li>
+        <span class="item__icon item__icon--2">📱</span>
+        <span class="item__text">3 идеи сторис на сегодня</span>
+        <span class="item__arrow">→</span>
+      </li>
+      <li>
+        <span class="item__icon item__icon--3">📅</span>
+        <span class="item__text">Контент-план на неделю</span>
+        <span class="item__arrow">→</span>
+      </li>
     </ul>
   </main>
 </body>
